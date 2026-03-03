@@ -1,0 +1,12 @@
+torch==2.1.0
+torchvision==0.16.0
+numpy==1.24.3
+opencv-python==4.8.0.74
+tqdm==4.65.0
+onnx==1.14.1
+onnxruntime==1.16.0
+Pillow==10.0.0
+scikit-image==0.21.0
+ptflops==0.7.1
+tensorflow==2.13.0
+onnx-tf==1.10.0

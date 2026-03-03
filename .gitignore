@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment
+.env
+.venv
+venv/
+ENV/
+
+# Dataset images
+data/DIV2K_train_HR/
+dataset/DIV2K_train_HR/
+*.png
+*.jpg
+*.jpeg
