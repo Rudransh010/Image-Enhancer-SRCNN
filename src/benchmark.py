@@ -87,7 +87,8 @@ def main(args):
     print("SRCNN Edge Model Benchmark")
     print("=" * 60)
     
-    device = torch.device('cpu')
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    print(f"Using device: {device}")
     
     model = create_model(args.num_channels, args.num_ds_blocks, args.num_res_blocks)
     model = model.to(device)

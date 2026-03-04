@@ -52,7 +52,8 @@ def verify_exports(torchscript_path, onnx_path, input_size=(1, 3, 256, 256)):
 
 
 def main(args):
-    device = torch.device('cpu')
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    print(f"Using device: {device}")
     model = create_model(args.num_channels, args.num_ds_blocks, args.num_res_blocks)
     
     if args.checkpoint:

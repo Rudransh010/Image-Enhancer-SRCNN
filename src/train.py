@@ -17,7 +17,7 @@ def train_epoch(model, train_loader, criterion, optimizer, scaler, device, epoch
     total_loss = 0
     
     pbar = tqdm(train_loader, desc=f"Epoch {epoch}")
-    for lr, hr in pbar:
+    for lr, hr, _ in pbar:
         lr, hr = lr.to(device), hr.to(device)
         
         optimizer.zero_grad()
@@ -28,10 +28,13 @@ def train_epoch(model, train_loader, criterion, optimizer, scaler, device, epoch
         
         if device.type == 'cuda':
             scaler.scale(loss).backward()
+            scaler.unscale_(optimizer)
+            torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
             scaler.step(optimizer)
             scaler.update()
         else:
             loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
             optimizer.step()
         
         total_loss += loss.item()
@@ -47,7 +50,7 @@ def validate(model, val_loader, criterion, device):
     total_ssim = 0
     
     with torch.no_grad():
-        for lr, hr in tqdm(val_loader, desc="Validating"):
+        for lr, hr, _ in tqdm(val_loader, desc="Validating"):
             lr, hr = lr.to(device), hr.to(device)
             
             with autocast(enabled=device.type == 'cuda'):
@@ -100,7 +103,7 @@ def main(args):
     
     if args.resume and os.path.exists(args.resume):
         print(f"Resuming from {args.resume}")
-        checkpoint = torch.load(args.resume, map_location=device)
+        checkpoint = torch.load(args.resume, map_location=device, weights_only=False)
         model.load_state_dict(checkpoint['model_state_dict'])
         optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         start_epoch = checkpoint['epoch'] + 1
@@ -155,7 +158,7 @@ if __name__ == "__main__":
     parser.add_argument('--epochs', type=int, default=150)
     parser.add_argument('--batch_size', type=int, default=16)
     parser.add_argument('--patch_size', type=int, default=96)
-    parser.add_argument('--lr', type=float, default=1e-3)
+    parser.add_argument('--lr', type=float, default=1e-4)
     parser.add_argument('--weight_decay', type=float, default=0)
     parser.add_argument('--num_channels', type=int, default=48)
     parser.add_argument('--num_ds_blocks', type=int, default=3)
