@@ -18,9 +18,24 @@ __pycache__/
 venv/
 ENV/
 
-# Dataset images
-data/DIV2K_train_HR/
-dataset/DIV2K_train_HR/
+# Datasets
+data/
+dataset/
 *.png
 *.jpg
 *.jpeg
+
+# Model checkpoints
+checkpoints/
+*.pth
+*.pt
+
+# Logs and artifacts
+artifacts/
+logs/
+*.log
+*.csv
+
+# Test results
+test_results/
+enhanced_image.jpg
